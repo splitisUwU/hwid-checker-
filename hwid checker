@@ -1,0 +1,38 @@
+@echo off
+:: Vérifie et demande les droits d'administrateur
+net session >nul 2>&1
+if errorlevel 1 (
+    echo Ce script doit être execute en tant qu'administrateur.
+    pause
+    exit
+)
+
+color 8B
+
+echo ============================================
+echo Recuperation des informations completes
+echo ============================================
+
+REM Numero de série et version du BIOS
+echo Informations sur le BIOS :
+wmic bios get serialnumber, version
+
+REM Informations et pilotes de la carte graphique
+echo.
+echo Informations sur la carte graphique et pilotes :
+wmic path win32_videocontroller get name, driverversion, status
+
+REM Informations sur l'ecran
+echo.
+echo Informations sur l'ecran (Nom, Identifiant, et Pilotes) :
+wmic desktopmonitor get name, monitorid
+
+REM Informations sur les pilotes des écrans
+echo.
+echo Détails des pilotes associés aux moniteurs :
+wmic path win32_pnpsigneddriver where "DeviceClass='Monitor'" get deviceid, driverversion, manufacturer
+
+echo.
+echo ============================================
+echo Récupération terminée.
+pause
